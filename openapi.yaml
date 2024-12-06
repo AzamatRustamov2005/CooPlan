@@ -1,6 +1,6 @@
 openapi: "3.0.2"
 info:
-    title: Bookmarker API
+    title: CooPlan API
     version: "1.0"
 servers:
     -   url: http://localhost:8080/
@@ -10,26 +10,57 @@ components:
             type: object
             additionalProperties: false
             required:
-                - id
-                - url
                 - title
+                - description
+                - members_limit
+                - start_datetime
+                - finish_datetime
+                - registration_deadline
+                - location
+                - image_url
             properties:
                 id:
-                    description: bookmark identifier
-                    type: string
-                url:
-                    description: bookmark url
-                    type: string
+                    description: Unique event identifier
+                    type: string  # id is UUID in the database, so it should be a string
                 title:
-                    description: bookmark title
+                    description: Event title
                     type: string
-                tag:
-                    description: optional tag for searching
+                description:
+                    description: A brief description of the event
                     type: string
-                created_ts:
-                    description: bookmarks creation time
+                organizer_id:
+                    description: ID of the user organizing the event
+                    type: integer  # references users(id), so it should be an integer
+                is_active:
+                    description: Indicates whether the user is active
+                    type: boolean
+                    default: true
+                members_limit:
+                    description: Maximum number of participants allowed for the event
+                    type: integer
+                start_datetime:
+                    description: The event's starting date and time
+                    type: string
+                    format: date-time  # Format for date-time is standard in OpenAPI for timestamps
+                finish_datetime:
+                    description: The event's finishing date and time
                     type: string
                     format: date-time
+                registration_deadline:
+                    description: Deadline for event registration
+                    type: string
+                    format: date-time
+                location:
+                    description: Geographical location of the event (latitude and longitude)
+                    type: string  # Use string for the POINT type (can store the WKT format or GeoJSON)
+                image_url:
+                    description: URL to the event's image
+                    type: string
+                checklist:
+                    description: Things needed to bring
+                    type: array
+                    items:
+                        type: string
 
         ResponseError:
             description: Bad Request
@@ -57,7 +88,7 @@ paths:
             requestBody:
                 required: true
                 content:
-                    multipart/form-data:
+                    application/json:
                         schema:
                             type: object
                             properties:
@@ -82,3 +113,217 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ResponseError'
+
+    /login:
+        post:
+            description: login user
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                password:
+                                    type: string
+                            required:
+                                - username
+                                - password
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties: 
+                                    token:
+                                        type: string
+
+                '400':
+                    description: Bad Request
+                    content: 
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseError'
+    
+    /events:
+        post:
+            description: creates new event
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            additionalProperties: false
+                            required:
+                                - title
+                                - description
+                                - members_limit
+                                - start_datetime
+                                - finish_datetime
+                                - registration_deadline
+                                - location
+                                - image_url
+                            properties:
+                                title:
+                                    description: Event title
+                                    type: string
+                                description:
+                                    description: A brief description of the event
+                                    type: string
+                                members_limit:
+                                    description: Maximum number of participants allowed for the event
+                                    type: integer
+                                start_datetime:
+                                    description: The event's starting date and time
+                                    type: string
+                                    format: date-time  # Format for date-time is standard in OpenAPI for timestamps
+                                finish_datetime:
+                                    description: The event's finishing date and time
+                                    type: string
+                                    format: date-time
+                                registration_deadline:
+                                    description: Deadline for event registration
+                                    type: string
+                                    format: date-time
+                                location:
+                                    description: Geographical location of the event (latitude and longitude)
+                                    type: string  # Use string for the POINT type (can store the WKT format or GeoJSON)
+                                image_url:
+                                    description: URL to the event's image
+                                    type: string
+            security:
+                -   UserTicketAuth: [ ]
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Event'
+                '400':
+                    description: Bad Request
+                    content: 
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ResponseError'
+                '401':
+                    $ref: "#/components/responses/UnauthorizedError"
+        get:
+            description: list all events with filters
+            parameters:
+                -   in: query
+                    name: limit
+                    description: max count of events returned in one request
+                    schema:
+                        type: integer
+                -   in: query
+                    name: tag
+                    description: filter event only with given tag
+                    schema:
+                        type: string
+                -   in: query
+                    name: order_by
+                    description: order by event by given field
+                    schema:
+                        type: string
+                        enum:
+                            - id
+                            - title
+                            - url
+                            - created_ts
+                        default: id
+
+            security:
+                -   UserTicketAuth: [ ]
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    items:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Event'
+                '401':
+                    $ref: "#/components/responses/UnauthorizedError"
+    /events/{id}:
+        post:
+            description: edit event by its identifier
+            parameters:
+                -   name: id
+                    in: path
+                    description: event id
+                    required: true
+                    schema:
+                        type: string
+            security:
+                -   UserTicketAuth: [ ]
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Event'
+                '401':
+                    $ref: "#/components/responses/UnauthorizedError"
+                '404':
+                    description: event is not found
+        get:
+            description: get event by its identifier
+            parameters:
+                -   name: id
+                    in: path
+                    description: event id
+                    required: true
+                    schema:
+                        type: string
+            security:
+                -   UserTicketAuth: [ ]
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Event'
+                '401':
+                    $ref: "#/components/responses/UnauthorizedError"
+                '404':
+                    description: event is not found
+        delete:
+            description: delete event by identifier
+            parameters:
+                -   name: id
+                    in: path
+                    description: Event id
+                    required: true
+                    schema:
+                        type: string
+            security:
+                -   UserTicketAuth: [ ]
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                        description: identifier of deleted Event
+                                        type: string
+                                required:
+                                    - id
+                '401':
+                    $ref: "#/components/responses/UnauthorizedError"
+                '404':
+                    description: Event is not found
