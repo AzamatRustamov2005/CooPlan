@@ -3,13 +3,14 @@
 #include <fmt/format.h>
 
 #include <userver/components/component_context.hpp>
-#include <userver/crypto/hash.hpp>
 #include <userver/server/handlers/http_handler_base.hpp>
 #include <userver/server/http/http_status.hpp>
 #include <userver/storages/postgres/cluster.hpp>
 #include <userver/storages/postgres/component.hpp>
 #include <userver/utils/assert.hpp>
+#include <userver/crypto/hash.hpp>
 
+#include "../../../models/user.hpp"
 #include "../../../common/response_helpers.hpp"
 #include "../../lib/auth.hpp"
 
@@ -17,13 +18,13 @@ namespace cooplan {
 
     namespace {
 
-        class RegisterUser final : public userver::server::handlers::HttpHandlerBase {
+        class LoginUser final : public userver::server::handlers::HttpHandlerBase {
         public:
             static constexpr std::string_view
-            kName = "handler-register-user";
+            kName = "handler-login-user";
 
-            RegisterUser(const userver::components::ComponentConfig &config,
-                         const userver::components::ComponentContext &component_context)
+            LoginUser(const userver::components::ComponentConfig &config,
+                      const userver::components::ComponentContext &component_context)
                     : HttpHandlerBase(config, component_context),
                       pg_cluster_(
                               component_context
@@ -48,29 +49,40 @@ namespace cooplan {
 
                 const auto password_encrypted = userver::crypto::hash::Sha256(password.value());
 
-                const auto result = pg_cluster_->Execute(
+                auto result = pg_cluster_->Execute(
                         userver::storages::postgres::ClusterHostType::kMaster,
-                        "INSERT INTO cooplan.users(username, password) VALUES($1, $2) "
-                        "ON CONFLICT DO NOTHING "
-                        "RETURNING users.id",
+                        "SELECT * FROM cooplan.users "
+                        "WHERE username = $1, password = $2",
                         username, password_encrypted
                 );
 
                 if (result.IsEmpty()) {
-                    return common::GetBadResponse(request, "User with such username already exists");
+                    return common::GetBadResponse(request, "User with such username not found");
+                    /*
+                    auto &response = request.GetHttpResponse();
+                    response.SetStatus(userver::server::http::HttpStatus::kNotFound);
+                    return {};
+                    */
                 }
 
-                int user_id = result.AsSingleRow<int>();
+                auto user = result.AsSingleRow<User>(userver::storages::postgres::kRowTag);
+                if (password != user.password) {
+                    return common::GetBadResponse(request, "User password is incorrect");
+                    /*
+                    auto &response = request.GetHttpResponse();
+                    response.SetStatus(userver::server::http::HttpStatus::kNotFound);
+                    return {};
+                    */
+                }
 
-                // Create a new session for the registered user
-                auto session_id = CreateSession(pg_cluster_, user_id);
+                auto session_id = CreateSession(pg_cluster_, user.id);
                 if (!session_id) {
-                    return common::GetBadResponse(request, "Failed to create session");
+                    return cooplan::common::GetBadResponse(request, "Failed to create session");
                 }
 
-                // Construct success response
+                // Success response with user and session data
                 userver::formats::json::ValueBuilder response;
-                // response["user_id"] = user_id;
+                // response["user_id"] = user.id;
                 response["token"] = *session_id;
 
                 return userver::formats::json::ToString(response.ExtractValue());
@@ -82,8 +94,8 @@ namespace cooplan {
 
     }  // namespace
 
-    void AppendRegisterUser(userver::components::ComponentList &component_list) {
-        component_list.Append<RegisterUser>();
+    void AppendLoginUser(userver::components::ComponentList &component_list) {
+        component_list.Append<LoginUser>();
     }
 
 }  // namespace cooplan

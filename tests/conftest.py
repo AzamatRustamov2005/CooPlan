@@ -37,22 +37,13 @@ def pgsql_local(service_source_dir, pgsql_local_create):
 @pytest.fixture(name='register')
 async def register(service_client):
     async def _register(username: str, password: str):
-        with aiohttp.MultipartWriter('form-data') as data:
-            if username:
-                payload = aiohttp.payload.StringPayload(username)
-                payload.set_content_disposition('form-data', name='username')
-                data.append_payload(payload)
-            if password:
-                payload = aiohttp.payload.StringPayload(password)
-                payload.set_content_disposition('form-data', name='password')
-                data.append_payload(payload)
-        headers = {
-            'Content-Type': 'multipart/form-data; boundary=' + data.boundary,
+        json = {
+            'username': username,
+            'password': password
         }
         response = await service_client.post(
-            '/v1/register-user',
-            data=data,
-            headers=headers
+            '/register',
+            json=json
         )
         return response
     return _register
@@ -61,22 +52,16 @@ async def register(service_client):
 @pytest.fixture(name='login')
 async def login(service_client):
     async def _login(email: str, password: str):
-        with aiohttp.MultipartWriter('form-data') as data:
-            if email:
-                payload = aiohttp.payload.StringPayload(email)
-                payload.set_content_disposition('form-data', name='email')
-                data.append_payload(payload)
-            if password:
-                payload = aiohttp.payload.StringPayload(password)
-                payload.set_content_disposition('form-data', name='password')
-                data.append_payload(payload)
+        json = {
+            'username': username,
+            'password': password
+        }
         headers = {
-            'Content-Type': 'multipart/form-data; boundary=' + data.boundary,
+            'Content-Type': 'multipart/form-data; boundary=',
         }
         response = await service_client.post(
             '/login',
-            data=data,
-            headers=headers
+            json=json
         )
         return response
     return _login

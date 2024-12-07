@@ -26,8 +26,16 @@ userver_setup_environment()
 
 # Common sources
 add_library(${PROJECT_NAME}_objs OBJECT
+    src/models/session.hpp
+    src/models/user.hpp
+    src/common/response_helpers.hpp
+    src/common/response_helpers.cpp
+    src/handlers/lib/auth.hpp
+    src/handlers/lib/auth.cpp
     src/handlers/v1/register/view.hpp
     src/handlers/v1/register/view.cpp
+    src/handlers/v1/login/view.hpp
+    src/handlers/v1/login/view.cpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::postgresql)
 

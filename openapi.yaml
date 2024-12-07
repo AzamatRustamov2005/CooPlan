@@ -106,7 +106,9 @@ paths:
                         application/json:
                             schema:
                                 type: object
-                                properties: {}
+                                properties: 
+                                    token:
+                                        type: string
                 '400':
                     description: Bad Request
                     content: 

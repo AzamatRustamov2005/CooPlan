@@ -8,6 +8,7 @@
 #include <userver/utils/daemon_run.hpp>
 
 #include "handlers/v1/register/view.hpp"
+#include "handlers/v1/login/view.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -19,6 +20,7 @@ int main(int argc, char* argv[]) {
                             .Append<userver::components::Postgres>("postgres-db-1");
 
   cooplan::AppendRegisterUser(component_list);
+  cooplan::AppendLoginUser(component_list);
   
 
   return userver::utils::DaemonMain(argc, argv, component_list);
