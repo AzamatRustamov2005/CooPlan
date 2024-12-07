@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(pg_service_template CXX)
+project(cooplan CXX)
 
 
 # Adding userver dependency
@@ -26,8 +26,16 @@ userver_setup_environment()
 
 # Common sources
 add_library(${PROJECT_NAME}_objs OBJECT
-    src/hello.hpp
-    src/hello.cpp
+    src/models/session.hpp
+    src/models/user.hpp
+    src/common/response_helpers.hpp
+    src/common/response_helpers.cpp
+    src/handlers/lib/auth.hpp
+    src/handlers/lib/auth.cpp
+    src/handlers/v1/register/view.hpp
+    src/handlers/v1/register/view.cpp
+    src/handlers/v1/login/view.hpp
+    src/handlers/v1/login/view.cpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::postgresql)
 
@@ -35,22 +43,6 @@ target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::postgresql)
 # The Service
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_objs)
-
-
-# Unit Tests
-add_executable(${PROJECT_NAME}_unittest
-    src/hello_test.cpp
-)
-target_link_libraries(${PROJECT_NAME}_unittest PRIVATE ${PROJECT_NAME}_objs userver::utest)
-add_google_tests(${PROJECT_NAME}_unittest)
-
-
-# Benchmarks
-add_executable(${PROJECT_NAME}_benchmark
-    src/hello_benchmark.cpp
-)
-target_link_libraries(${PROJECT_NAME}_benchmark PRIVATE ${PROJECT_NAME}_objs userver::ubench)
-add_google_benchmark_tests(${PROJECT_NAME}_benchmark)
 
 
 # Functional Tests
