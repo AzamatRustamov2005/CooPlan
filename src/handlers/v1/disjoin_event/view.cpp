@@ -67,8 +67,10 @@ namespace cooplan {
                     */
                 }
 
-                auto status = result.AsSingleRow<std::string>();
-                return ToString(userver::formats::json::ValueBuilder{status}.ExtractValue());
+                 // Construct success response
+                userver::formats::json::ValueBuilder response;
+                response["status"] = result.AsSingleRow<std::string>();
+                return userver::formats::json::ToString(response.ExtractValue());
             }
 
         private:

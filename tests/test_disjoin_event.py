@@ -16,4 +16,4 @@ async def test_disjoin_event(service_client):
     )
     assert disjoin_response.status == 200
     disjoin_data = disjoin_response.json()
-    assert disjoin_data == 'success'
+    assert disjoin_data["status"] == 'success'
