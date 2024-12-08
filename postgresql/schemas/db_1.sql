@@ -7,7 +7,8 @@ CREATE SCHEMA IF NOT EXISTS cooplan;
 CREATE TABLE IF NOT EXISTS cooplan.users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    contact TEXT DEFAULT '+998901112233'
 );
 
 CREATE TABLE IF NOT EXISTS cooplan.auth_sessions (

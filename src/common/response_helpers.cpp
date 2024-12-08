@@ -6,7 +6,7 @@ namespace cooplan::common {
 
 std::string GetBadResponse(const userver::server::http::HttpRequest &request, const std::string &message) {
     userver::formats::json::ValueBuilder error_response;
-    error_response["message"] = message;
+    error_response["detail"] = message;
 
     request.SetResponseStatus(userver::server::http::HttpStatus::kBadRequest);
     return userver::formats::json::ToString(error_response.ExtractValue());

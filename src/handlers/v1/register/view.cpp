@@ -68,10 +68,15 @@ namespace cooplan {
                     return common::GetBadResponse(request, "Failed to create session");
                 }
 
+                std::string default_contact = "+998901112233";
+
                 // Construct success response
                 userver::formats::json::ValueBuilder response;
-                // response["user_id"] = user_id;
-                response["token"] = *session_id;
+                response["username"] = username.value();
+                response["contact"] = default_contact;
+                response["id"] = user_id;
+                response["access_token"] = *session_id;
+                response["token_type"] = "bearer";
 
                 return userver::formats::json::ToString(response.ExtractValue());
             }

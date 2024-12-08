@@ -51,28 +51,18 @@ namespace cooplan {
 
                 auto result = pg_cluster_->Execute(
                         userver::storages::postgres::ClusterHostType::kMaster,
-                        "SELECT * FROM cooplan.users "
-                        "WHERE username = $1, password = $2",
+                        "SELECT id, username, password, contact FROM cooplan.users "
+                        "WHERE username = $1 AND password = $2",
                         username, password_encrypted
                 );
 
                 if (result.IsEmpty()) {
                     return common::GetBadResponse(request, "User with such username not found");
-                    /*
-                    auto &response = request.GetHttpResponse();
-                    response.SetStatus(userver::server::http::HttpStatus::kNotFound);
-                    return {};
-                    */
                 }
 
                 auto user = result.AsSingleRow<User>(userver::storages::postgres::kRowTag);
-                if (password != user.password) {
+                if (password_encrypted != user.password) {
                     return common::GetBadResponse(request, "User password is incorrect");
-                    /*
-                    auto &response = request.GetHttpResponse();
-                    response.SetStatus(userver::server::http::HttpStatus::kNotFound);
-                    return {};
-                    */
                 }
 
                 auto session_id = CreateSession(pg_cluster_, user.id);
@@ -82,8 +72,11 @@ namespace cooplan {
 
                 // Success response with user and session data
                 userver::formats::json::ValueBuilder response;
-                // response["user_id"] = user.id;
-                response["token"] = *session_id;
+                response["username"] = user.username;
+                response["contact"] = user.contact;
+                response["id"] = user.id;
+                response["access_token"] = *session_id;
+                response["token_type"] = "bearer";
 
                 return userver::formats::json::ToString(response.ExtractValue());
             }

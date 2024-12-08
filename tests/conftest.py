@@ -51,13 +51,10 @@ async def register(service_client):
 
 @pytest.fixture(name='login')
 async def login(service_client):
-    async def _login(email: str, password: str):
+    async def _login(username: str, password: str):
         json = {
             'username': username,
             'password': password
-        }
-        headers = {
-            'Content-Type': 'multipart/form-data; boundary=',
         }
         response = await service_client.post(
             '/login',
