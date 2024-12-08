@@ -38,7 +38,7 @@ public:
         const auto user_id = request.GetPathArg("id");
 
         if (user_id.empty()) {
-            return GetErrorResponse(request, "User ID is required.");
+            return GetErrorResponse(request, "User not found.");
         }
 
         auto result = pg_cluster_->Execute(
