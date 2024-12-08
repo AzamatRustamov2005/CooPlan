@@ -26,7 +26,7 @@ async def test_login(service_client):
     assert register_response.status == 200
 
     login_response = await service_client.post(
-        '/login',
+        '/users/login',
         json=json
     )
     assert login_response.status == 200

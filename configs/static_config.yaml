@@ -81,7 +81,7 @@ components_manager:
             task_processor: main-task-processor
 
         handler-get-event-by-id:
-            path: /event/{id}
+            path: /events/{id}
             method: GET
             task_processor: main-task-processor
 
