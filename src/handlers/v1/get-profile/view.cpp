@@ -43,8 +43,8 @@ public:
 
         auto result = pg_cluster_->Execute(
             userver::storages::postgres::ClusterHostType::kMaster,
-            "SELECT username, id, contact, image"
-            "FROM cooplan.users WHERE id = $1",
+            "SELECT username, id, contact, image "
+            "FROM cooplan.users WHERE id = CAST($1 AS INTEGER)",
             user_id);
 
         if (result.IsEmpty()) {
@@ -57,8 +57,8 @@ public:
             result[0]["username"].As<std::string>()).ExtractValue();
         response["contact"] = userver::formats::json::ValueBuilder(
             result[0]["contact"].As<std::string>()).ExtractValue();
-        response["photo"] = userver::formats::json::ValueBuilder(
-            result[0]["photo"].As<std::string>()).ExtractValue();
+        response["image"] = userver::formats::json::ValueBuilder(
+            result[0]["image"].As<std::string>()).ExtractValue();
 
         // Convert the response to a JSON string and return
         return userver::formats::json::ToString(response.ExtractValue());

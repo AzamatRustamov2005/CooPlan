@@ -9,6 +9,7 @@
 #include <string>
 
 #include "../../../models/event.hpp"
+#include "../../../models/event_participant.hpp"
 
 namespace cooplan {
   namespace {
@@ -32,10 +33,11 @@ namespace cooplan {
     std::string HandleRequestThrow(const userver::server::http::HttpRequest& request,
                                    userver::server::request::RequestContext&) const override {
       const auto user_id = request.GetPathArg("id");
+
       auto result = pg_cluster_->Execute(
             userver::storages::postgres::ClusterHostType::kMaster,
-            "SELECT id, event_id, user_id, status "
-            "FROM cooplan.event_participant WHERE user_id = CAST($1 AS INTEGER) AND status = 'accepted'",
+            "SELECT id, event_id, user_id, status::text "
+            "FROM cooplan.event_participant WHERE user_id = CAST($1 AS INTEGER) AND status = 'accepted'::status_enum",
             user_id);
 
       if (result.IsEmpty()) {
@@ -43,14 +45,25 @@ namespace cooplan {
       }
 
 
-      const auto events = result.AsSetOf<Event>(userver::storages::postgres::kRowTag);
+      const auto events = result.AsSetOf<event_participant>(userver::storages::postgres::kRowTag);
+
+
+      auto resultAll = pg_cluster_->Execute(
+            userver::storages::postgres::ClusterHostType::kMaster,
+            "SELECT id, title, description, organizer_id, is_active, members_limit, start_datetime, finish_datetime, registration_deadline, latitude, longitude, image_url "
+            "FROM cooplan.events");
+      const auto eventsOut = resultAll.AsSetOf<Event>(userver::storages::postgres::kRowTag);
       userver::formats::json::ValueBuilder response;
 
       response["joined_events"].Resize(0);
-
-      for(const auto event : events){
-          response["joined_events"].PushBack(event);
+      for (const auto& eventOut : eventsOut) {
+        for (const auto& event : events) {
+          if (eventOut.id == event.event_id) {
+            response["joined_events"].PushBack(eventOut);
+          }
         }
+      }
+
 
       return userver::formats::json::ToString(response.ExtractValue());
     }

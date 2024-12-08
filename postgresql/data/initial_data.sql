@@ -43,3 +43,33 @@ INSERT INTO cooplan.auth_sessions (
     'asdf',
     1
 );
+
+INSERT INTO cooplan.users(
+    id, username, contact, image, password
+)values(
+    123,'test', 'test@example.com', 'photo_url', 'abcd'
+);
+
+-- INSERT INTO cooplan.events(
+--     title, organizer_id, image_url, description
+-- )VALUES (
+--     'Event 1', 123, 'ask', 'a'
+-- );
+--
+-- INSERT INTO cooplan.event_participant(
+--     id, event_id, user_id, status
+-- )VALUES(
+--         2, '120', '10', 'accepted'
+--        );
+INSERT INTO cooplan.event_participant (
+    event_id,
+    user_id,
+    status
+) VALUES (
+             1,
+             123,
+            'accepted'
+         );
+
+
+
