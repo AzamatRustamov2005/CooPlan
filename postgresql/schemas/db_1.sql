@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS cooplan.events (
 CREATE TYPE status_enum AS ENUM ('pending', 'accepted', 'rejected');
 
 CREATE TABLE IF NOT EXISTS cooplan.event_participant (
-                                                         id SERIAL PRIMARY KEY,
-                                                         event_id INT NOT NULL REFERENCES cooplan.events(id) ON DELETE CASCADE,
+    id SERIAL PRIMARY KEY,
+    event_id INT NOT NULL REFERENCES cooplan.events(id) ON DELETE CASCADE,
     user_id INT NOT NULL REFERENCES cooplan.users(id) ON DELETE CASCADE,
     status status_enum DEFAULT 'pending',
     UNIQUE(event_id, user_id)

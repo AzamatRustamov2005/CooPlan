@@ -34,7 +34,7 @@ namespace cooplan {
       auto result = pg_cluster_->Execute(
             userver::storages::postgres::ClusterHostType::kMaster,
             "SELECT id, title, description, organizer_id, is_active, members_limit, start_datetime, finish_datetime, registration_deadline, latitude, longitude, image_url "
-            "FROM cooplan.event WHERE organizer_id = $1",
+            "FROM cooplan.events WHERE organizer_id = CAST($1 AS INTEGER)",
             user_id);
 
       if (result.IsEmpty()) {

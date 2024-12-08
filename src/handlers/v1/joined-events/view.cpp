@@ -34,8 +34,8 @@ namespace cooplan {
       const auto user_id = request.GetPathArg("id");
       auto result = pg_cluster_->Execute(
             userver::storages::postgres::ClusterHostType::kMaster,
-            "SELECT id, title, description, organizer_id, is_active, members_limit, start_datetime, finish_datetime, registration_deadline, latitude, longitude, image_url "
-            "FROM cooplan.users WHERE id = $1",
+            "SELECT id, event_id, user_id, status "
+            "FROM cooplan.event_participant WHERE user_id = CAST($1 AS INTEGER) AND status = 'accepted'",
             user_id);
 
       if (result.IsEmpty()) {
@@ -49,12 +49,8 @@ namespace cooplan {
       response["joined_events"].Resize(0);
 
       for(const auto event : events){
-        if (std::to_string(event.organizer_id) == user_id){
-          continue;
-        }else{
           response["joined_events"].PushBack(event);
         }
-      }
 
       return userver::formats::json::ToString(response.ExtractValue());
     }
