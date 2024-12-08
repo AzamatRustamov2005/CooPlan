@@ -13,7 +13,7 @@ async def test_get_events(service_client):
 
 @pytest.mark.pgsql('db_1', files=['initial_data.sql'])
 async def test_get_events_by_id(service_client):
-    response = await service_client.get('/event/1')
+    response = await service_client.get('/events/1')
     assert response.status == 200
     assert response.json != {}
 

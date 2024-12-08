@@ -91,8 +91,13 @@ components_manager:
             task_processor: main-task-processor
 
         handler-join-event:
-            path: /join_event
+            path: /events/{id}/join
             method: POST
+            task_processor: main-task-processor
+
+        handler-disjoin-event:
+            path: /events/{id}/disjoin
+            method: DELETE
             task_processor: main-task-processor
 
         postgres-db-1:

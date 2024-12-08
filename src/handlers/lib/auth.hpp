@@ -7,7 +7,7 @@
 
 namespace cooplan {
 
-const std::string USER_TICKET_HEADER_NAME = "X-Ya-User-Ticket";
+const std::string USER_TICKET_HEADER_NAME = "Authorization";
 
 std::optional<TSession> GetSessionInfo(
     userver::storages::postgres::ClusterPtr pg_cluster,
