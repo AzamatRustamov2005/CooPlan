@@ -43,7 +43,7 @@ namespace cooplan {
                     response.SetStatus(userver::server::http::HttpStatus::kUnauthorized);
                     return {};
                 }
-                const auto event_id = request_body["event_id"].As<std::optional<int>>();
+                const auto event_id = std::stoi(request.GetPathArg("id"));
                 const auto user_id = session->user_id;
 /*
                 if (!event_id.has_value() || event_id->empty()) {

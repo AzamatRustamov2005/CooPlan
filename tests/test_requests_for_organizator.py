@@ -13,7 +13,7 @@ async def test_no_token(service_client):
 @pytest.mark.pgsql('db_1', files=['initial_data.sql'])
 async def test_see_requests(service_client):
     token = 'session_token_organizer1'
-    headers = {"X-Ya-User-Ticket": token}
+    headers = {"Authorization": token}
     data = {}
     response = await service_client.get('/requests_for_organizator', headers = headers, json = data)
     assert response.status == 200
@@ -32,7 +32,7 @@ async def test_see_requests(service_client):
 @pytest.mark.pgsql('db_1', files=['initial_data.sql'])
 async def test_see_requests_1(service_client):
     token = 'session_token_organizer2'
-    headers = {"X-Ya-User-Ticket": token}
+    headers = {"Authorization": token}
     data = {}
     response = await service_client.get('/requests_for_organizator', headers = headers, json = data)
     assert response.status == 200

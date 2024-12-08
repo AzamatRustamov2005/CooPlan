@@ -21,7 +21,7 @@ async def test_get_events_by_id(service_client):
 @pytest.mark.pgsql('db_1', files=['initial_data.sql'])
 async def test_response_to_join_approve(service_client):
     token = 'asdf'
-    headers = {"X-Ya-User-Ticket": token}
+    headers = {"Authorization": token}
     json = {'user_id': 1, 'event_id': 1, 'status': "accepted"}
     response = await service_client.post(
         '/response_to_join',
@@ -34,7 +34,7 @@ async def test_response_to_join_approve(service_client):
 @pytest.mark.pgsql('db_1', files=['initial_data.sql'])
 async def test_response_to_join_deny(service_client):
     token = 'asdf'
-    headers = {"X-Ya-User-Ticket": token}
+    headers = {"Authorization": token}
     json = {'user_id': 1, 'event_id': 1, 'status': "rejected"}
     response = await service_client.post(
         '/response_to_join',
