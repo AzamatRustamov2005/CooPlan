@@ -54,8 +54,24 @@ components_manager:
             path: /register            # Registering handler by URL '/register'.
             method: POST                  # It will only reply to POST requests.
             task_processor: main-task-processor  # Run it on CPU bound task processor
+        
         handler-login-user:
             path: /login
+            method: POST
+            task_processor: main-task-processor
+        
+        handler-get-events:
+            path: /events
+            method: GET
+            task_processor: main-task-processor
+
+        handler-get-event-by-id:
+            path: /event/{id}
+            method: GET
+            task_processor: main-task-processor
+
+        handler-response-to-join:
+            path: /response_to_join
             method: POST
             task_processor: main-task-processor
 

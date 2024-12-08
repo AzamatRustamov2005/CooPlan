@@ -28,6 +28,8 @@ userver_setup_environment()
 add_library(${PROJECT_NAME}_objs OBJECT
     src/models/session.hpp
     src/models/user.hpp
+    src/models/event.hpp
+    src/models/event.cpp
     src/common/response_helpers.hpp
     src/common/response_helpers.cpp
     src/handlers/lib/auth.hpp
@@ -36,6 +38,12 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/handlers/v1/register/view.cpp
     src/handlers/v1/login/view.hpp
     src/handlers/v1/login/view.cpp
+    src/handlers/v1/get-events/view.hpp
+    src/handlers/v1/get-events/view.cpp
+    src/handlers/v1/get-event-by-id/view.hpp
+    src/handlers/v1/get-event-by-id/view.cpp
+    src/handlers/v1/response-to-join/view.hpp
+    src/handlers/v1/response-to-join/view.cpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::postgresql)
 

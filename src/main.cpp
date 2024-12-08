@@ -9,6 +9,9 @@
 
 #include "handlers/v1/register/view.hpp"
 #include "handlers/v1/login/view.hpp"
+#include "handlers/v1/get-events/view.hpp"
+#include "handlers/v1/get-event-by-id/view.hpp"
+#include "handlers/v1/response-to-join/view.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -21,7 +24,9 @@ int main(int argc, char* argv[]) {
 
   cooplan::AppendRegisterUser(component_list);
   cooplan::AppendLoginUser(component_list);
-  
+  cooplan::AppendGetEvents(component_list);
+  cooplan::AppendGetEvent(component_list);
+  cooplan::AppendResponseToJoin(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }

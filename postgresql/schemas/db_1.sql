@@ -15,3 +15,28 @@ CREATE TABLE IF NOT EXISTS cooplan.auth_sessions (
     user_id INT NOT NULL,
     foreign key(user_id) REFERENCES cooplan.users(id)
 );
+
+CREATE TABLE IF NOT EXISTS cooplan.events (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT,
+    organizer_id BIGINT NOT NULL REFERENCES cooplan.users(id),
+    is_active BOOLEAN DEFAULT true,
+    members_limit INT,
+    start_datetime TIMESTAMP,
+    finish_datetime TIMESTAMP,
+    registration_deadline TIMESTAMP,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    image_url TEXT NOT NULL
+);
+
+CREATE TYPE status_enum AS ENUM ('pending', 'accepted', 'rejected');
+
+CREATE TABLE IF NOT EXISTS cooplan.event_participant (
+    id SERIAL PRIMARY KEY,
+    event_id INT NOT NULL REFERENCES cooplan.events(id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES cooplan.users(id) ON DELETE CASCADE,
+    status status_enum DEFAULT 'pending',
+    UNIQUE(event_id, user_id)
+);
