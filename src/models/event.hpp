@@ -14,7 +14,7 @@ namespace cooplan {
     int members_limit;
     std::chrono::system_clock::time_point start_datetime;
     std::chrono::system_clock::time_point finish_datetime;
-    std::chrono::system_clock::time_point registration_deadline;
+    std::optional<std::chrono::system_clock::time_point> registration_deadline;
     double latitude;
     double longitude;
     std::string image_url;

@@ -54,6 +54,10 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/handlers/v1/delete_event/view.cpp
     src/handlers/v1/disjoin_event/view.hpp
     src/handlers/v1/disjoin_event/view.cpp
+    src/handlers/v1/create_event/view.hpp
+    src/handlers/v1/create_event/view.cpp
+    src/handlers/v1/edit_event/view.hpp
+    src/handlers/v1/edit_event/view.cpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::postgresql)
 

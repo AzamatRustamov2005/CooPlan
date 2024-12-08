@@ -100,6 +100,16 @@ components_manager:
             method: DELETE
             task_processor: main-task-processor
 
+        handler-create-event:
+            path: /events
+            method: POST
+            task_processor: main-task-processor
+
+        handler-edit-event:
+            path: /events/{id}
+            method: PUT
+            task_processor: main-task-processor
+
         postgres-db-1:
             dbconnection: $dbconnection
             dbconnection#env: DB_CONNECTION

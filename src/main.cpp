@@ -17,6 +17,8 @@
 #include "handlers/v1/requests_for_organizator/view.hpp"
 #include "handlers/v1/delete_event/view.hpp"
 #include "handlers/v1/disjoin_event/view.hpp"
+#include "handlers/v1/create_event/view.hpp"
+#include "handlers/v1/edit_event/view.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -37,6 +39,8 @@ int main(int argc, char* argv[]) {
   cooplan::AppendRequestsForOrganizator(component_list);
   cooplan::AppendDeleteEvent(component_list);
   cooplan::AppendDisjoinEvent(component_list);
+  cooplan::AppendCreateEvent(component_list);
+  cooplan::AppendEditEvent(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }
