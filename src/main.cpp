@@ -12,6 +12,7 @@
 #include "handlers/v1/get-events/view.hpp"
 #include "handlers/v1/get-event-by-id/view.hpp"
 #include "handlers/v1/response-to-join/view.hpp"
+#include "handlers/v1/join_event/view.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
   cooplan::AppendGetEvents(component_list);
   cooplan::AppendGetEvent(component_list);
   cooplan::AppendResponseToJoin(component_list);
+  cooplan::AppendJoinEvent(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }

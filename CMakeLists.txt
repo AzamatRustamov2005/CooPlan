@@ -44,6 +44,8 @@ add_library(${PROJECT_NAME}_objs OBJECT
     src/handlers/v1/get-event-by-id/view.cpp
     src/handlers/v1/response-to-join/view.hpp
     src/handlers/v1/response-to-join/view.cpp
+    src/handlers/v1/join_event/view.hpp
+    src/handlers/v1/join_event/view.cpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver::postgresql)
 

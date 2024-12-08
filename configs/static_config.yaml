@@ -75,6 +75,11 @@ components_manager:
             method: POST
             task_processor: main-task-processor
 
+        handler-join-event:
+            path: /join_event
+            method: POST
+            task_processor: main-task-processor
+
         postgres-db-1:
             dbconnection: $dbconnection
             dbconnection#env: DB_CONNECTION
