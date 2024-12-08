@@ -37,6 +37,18 @@ namespace {
             const userver::server::http::HttpRequest &request,
             userver::server::request::RequestContext &) const override {
 
+            const auto id = request.GetPathArg("id");
+
+            int event_id;
+
+            try {
+              event_id = std::stoi(id);
+            }
+            catch (const std::invalid_argument &e) {
+              request.SetResponseStatus(userver::server::http::HttpStatus::kBadRequest);
+              return ErrorResponse("Event ID is required");
+            }
+
             auto session_info = cooplan::GetSessionInfo(pg_cluster_, request);
             if (!session_info.has_value()) {
                 request.SetResponseStatus(userver::server::http::HttpStatus::kUnauthorized);
@@ -46,12 +58,6 @@ namespace {
             const auto user_id = session_info->user_id;
             
             const auto request_body = userver::formats::json::FromString(request.RequestBody());
-            const auto event_id = request_body["event_id"].As<std::optional<int>>();
-
-            if (!event_id.has_value()) {
-                request.SetResponseStatus(userver::server::http::HttpStatus::kBadRequest);
-                return ErrorResponse("Event ID is required");
-            }
 
             auto result = pg_cluster_->Execute(
                 userver::storages::postgres::ClusterHostType::kMaster,

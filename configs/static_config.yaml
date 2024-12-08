@@ -71,7 +71,7 @@ components_manager:
             task_processor: main-task-processor         # Run it on CPU bound task processor
 
         handler-delete-event:
-            path: /delete_event                         # Delete_event handler
+            path: /events/{id}                         # Delete_event handler
             method: DELETE                              # Accepts only DELETE methods
             task_processor: main-task-processor         # Run it on CPU bound task processor
         
