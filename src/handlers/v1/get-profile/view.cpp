@@ -24,7 +24,7 @@ std::string GetErrorResponse(const userver::server::http::HttpRequest& request, 
 
 class GetProfile final : public userver::server::handlers::HttpHandlerBase {
 public:
-    static constexpr std::string_view kName = "handler-v1-get-profile";
+    static constexpr std::string_view kName = "handler-get-profile";
 
     GetProfile(const userver::components::ComponentConfig& config,
                const userver::components::ComponentContext& component_context)

@@ -21,7 +21,7 @@ namespace cooplan {
   }
   class JoinedEvents final : public userver::server::handlers::HttpHandlerBase {
   public:
-    static constexpr std::string_view kName = "handler-v1-joined-events";
+    static constexpr std::string_view kName = "handler-joined-events";
 
     JoinedEvents(const userver::components::ComponentConfig& config,
                const userver::components::ComponentContext& component_context)

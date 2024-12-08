@@ -20,7 +20,7 @@ namespace cooplan {
   }
   class OrganizedEvents final : public userver::server::handlers::HttpHandlerBase {
   public:
-    static constexpr std::string_view kName = "handler-v1-organized-events";
+    static constexpr std::string_view kName = "handler-organized-events";
 
     OrganizedEvents(const userver::components::ComponentConfig& config,
                const userver::components::ComponentContext& component_context)
