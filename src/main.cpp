@@ -13,6 +13,9 @@
 #include "handlers/v1/get-event-by-id/view.hpp"
 #include "handlers/v1/response-to-join/view.hpp"
 #include "handlers/v1/join_event/view.hpp"
+#include "handlers/v1/status_of_request/view.hpp"
+#include "handlers/v1/requests_for_organizator/view.hpp"
+#include "handlers/v1/delete_event/view.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -29,6 +32,9 @@ int main(int argc, char* argv[]) {
   cooplan::AppendGetEvent(component_list);
   cooplan::AppendResponseToJoin(component_list);
   cooplan::AppendJoinEvent(component_list);
+  cooplan::AppendStatusOfRequest(component_list);
+  cooplan::AppendRequestsForOrganizator(component_list);
+  cooplan::AppendDeleteEvent(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }

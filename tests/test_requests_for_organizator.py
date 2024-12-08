@@ -23,8 +23,8 @@ async def test_see_requests(service_client):
     assert isinstance(json_response, list)
 
     expected_data = [
-        {"event_id": 1, "event_name": "Tech Meetup", "user_id": 3, "user_username": "participant1"},
-        {"event_id": 1, "event_name": "Tech Meetup", "user_id": 4, "user_username": "participant2"}
+        {"event_id": 3, "event_name": "Tech Meetup", "user_id": 4, "user_username": "participant1"},
+        {"event_id": 3, "event_name": "Tech Meetup", "user_id": 5, "user_username": "participant2"}
     ]
     assert len(json_response) == len(expected_data)
     for expected, actual in zip(expected_data, json_response):
@@ -42,7 +42,7 @@ async def test_see_requests_1(service_client):
     assert isinstance(json_response, list)
 
     expected_data = [
-        {"event_id": 2, "event_name": "Charity Run", "user_id": 4, "user_username": "participant2"},
+        {"event_id": 4, "event_name": "Charity Run", "user_id": 5, "user_username": "participant2"},
     ]
     assert len(json_response) == len(expected_data)
     for expected, actual in zip(expected_data, json_response):

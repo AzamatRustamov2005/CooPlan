@@ -42,7 +42,7 @@ async def register(service_client):
             'password': password
         }
         response = await service_client.post(
-            '/register',
+            '/users/register',
             json=json
         )
         return response
@@ -57,7 +57,7 @@ async def login(service_client):
             'password': password
         }
         response = await service_client.post(
-            '/login',
+            '/users/login',
             json=json
         )
         return response

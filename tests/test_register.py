@@ -19,7 +19,7 @@ async def test_login(service_client):
         'password': 'qwerty'
     }
     register_response = await service_client.post(
-        '/register',
+        '/users/register',
         json=json
     )
 

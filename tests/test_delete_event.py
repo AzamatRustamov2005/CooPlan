@@ -33,7 +33,7 @@ async def test_wrong_event_id(service_client):
 async def test_not_organizer(service_client):
     token = 'session_token_participant1'
     headers = {"X-Ya-User-Ticket": token}
-    data = {'event_id': 2}
+    data = {'event_id': 4}
     response = await service_client.delete('/delete_event', headers = headers, json = data)
     assert response.status == 401
     assert response.json() == {'message': 'Unauthorized: User is not the organizer of this event'}
@@ -42,7 +42,7 @@ async def test_not_organizer(service_client):
 async def test_succesfull_deletion(service_client):
     token = 'session_token_organizer2'
     headers = {"X-Ya-User-Ticket": token}
-    data = {'event_id': 2}
+    data = {'event_id': 4}
     response = await service_client.delete('/delete_event', headers = headers, json = data)
     assert response.status == 200
     assert response.json() == {'status' : 'deleted'}
