@@ -56,8 +56,6 @@ namespace {
             }
 
             const auto user_id = session_info->user_id;
-            
-            const auto request_body = userver::formats::json::FromString(request.RequestBody());
 
             auto result = pg_cluster_->Execute(
                 userver::storages::postgres::ClusterHostType::kMaster,

@@ -35,8 +35,7 @@ namespace cooplan {
                     const userver::server::http::HttpRequest &request,
                     userver::server::request::RequestContext &
             ) const override {
-                const auto request_body = userver::formats::json::FromString(request.RequestBody());
-                
+
                 auto session = GetSessionInfo(pg_cluster_, request);
                 if (!session) {
                     auto& response = request.GetHttpResponse();
