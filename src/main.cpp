@@ -19,6 +19,7 @@
 #include "handlers/v1/disjoin_event/view.hpp"
 #include "handlers/v1/create_event/view.hpp"
 #include "handlers/v1/edit_event/view.hpp"
+#include "handlers/v1/joined_events/view.hpp"
 
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
@@ -41,6 +42,7 @@ int main(int argc, char* argv[]) {
   cooplan::AppendDisjoinEvent(component_list);
   cooplan::AppendCreateEvent(component_list);
   cooplan::AppendEditEvent(component_list);
+  cooplan::AppendJoinedEvents(component_list);
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }

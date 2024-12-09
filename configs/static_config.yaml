@@ -110,6 +110,11 @@ components_manager:
             method: PUT
             task_processor: main-task-processor
 
+        handler-joined-events:
+            path: /my_events
+            method: GET
+            task_processor: main-task-processor
+
         postgres-db-1:
             dbconnection: $dbconnection
             dbconnection#env: DB_CONNECTION
